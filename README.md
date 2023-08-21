@@ -37,6 +37,7 @@ First, we will apply the principle of conservation of mass to the fluid in the c
 $$\frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0$$
 
 Second, we will apply the principle of conservation of momentum to the control volume. This is slightly more abstract and complex compared to the previous case but eventually, this reduces to the incompressible Navier-Stokes equations.
+
 $$\frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} + v\frac{\partial u}{\partial y} = -\frac{1}{\rho}\frac{\partial p}{\partial x} + \nu(\frac{\partial^{2} u}{\partial x^2} + \frac{\partial^{2} u}{\partial y^{2}})$$
 
 $$\frac{\partial v}{\partial t} + u\frac{\partial v}{\partial x} + v\frac{\partial v}{\partial y} = -\frac{1}{\rho}\frac{\partial p}{\partial y} + \nu(\frac{\partial^{2} v}{\partial x^2} + \frac{\partial^{2} v}{\partial y^{2}})$$
@@ -50,11 +51,11 @@ $$\frac{\partial u}{\partial t} \approx \frac{u(x+\Delta x) - u(x - \Delta x)}{2
 
 $$\frac{\partial^{2} u}{\partial x^2} \approx \frac{u(x+\Delta x) - 2u(x) + u(x - \Delta x)}{2\Delta x} = \frac{\Delta^2 u}{\Delta x^2}$$
 
-While this is not the best method to model fluid flow in all cases, we will proceed with it since it simplifies other aspects of modeling a crystallizer, which is the ultimate objective of this series of articles. For more rigorous numerical treatments, you may want to use the the Finite Volume or Finite Element methods.
+While this is not the best method to model fluid flow in all cases, we will proceed with it since it simplifies other aspects of modeling a crystallizer. For more rigorous numerical treatments, you may want to use the the Finite Volume or Finite Element methods.
 
 ## 4. Code Organization ##
 The code is organized into three different files or scripts. 
-- The first — “FlowPy.py” — contains the code for the solution of the PDEs using the finite difference method for a general set of inputs. 
+- The first — “FlowPy.ipynb” — contains the code for the solution of the PDEs using the finite difference method for a general set of inputs. 
 - The inputs are provided to this script using the “FlowPy_Input.py” script which acts as a user interface. 
 - Finally, the “FlowPy_Visualizer.py” script is used to animate the dynamics of the flow after running the simulation.
 
