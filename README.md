@@ -1,10 +1,20 @@
 # Modelling-Laminar-Flow-Python #
+## The Project
 This project aims to solve the 2D Navier-Stokes equations using the finite difference method for single-phase laminar flow and verify results using the benchmark lid cavity test.
 
 The Navier-Stokes equations and the continuity equation are discretized using a second order finite difference method and solved numerically. To ensure a divergence free velocity at the end of each time step, the process of calculating velocity and pressure is as follows:
 - Calculate intermediate starred velocities that may not necessarily be divergence free by solving the momentum equation without the pressure term. This is the predictor step.
 - Differentitate the momentum equation (with the pressure term) and apply continuity to eliminate next time-step velocities. Thus, we are left with a Poisson equation for pressure in terms of the starred velocities. This step gives the pressure field for the next time-step.
 - Calculate divergence-free velocities for the next time-step using the newly calculated pressure field and the starred velocities in a corrector step.
+
+Table of Contents: 
+1. [Introduction](#1-introduction)
+2. [Governing Equations](#2-governing-equations)
+3. [Numerical Methods](#3-numerical-methods)
+4. [Code Organization](#4-code-organization)
+5. [References](#references)
+
+Let us now get a better feeling for the topic!
 
 ## 1. Introduction ##
 Fluid flow can be understood using three main approaches: experimental, analytical, and numerical. 
