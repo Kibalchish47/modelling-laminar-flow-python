@@ -34,24 +34,34 @@ Consider a 2D box having a fixed volume in space. This is what we term the contr
 ![Alt text](<assets/Figure1 Control Volume.png> "Figure 1: Control Volume")
 
 First, we will apply the principle of conservation of mass to the fluid in the control volume. For an incompressible fluid (most liquids), this means that whatever fluid enters the box must exit it. This is referred to as the equation of continuity in fluid mechanics.
-$$\frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0$$
+$$
+\frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0
+$$
 
 Second, we will apply the principle of conservation of momentum to the control volume. This is slightly more abstract and complex compared to the previous case but eventually, this reduces to the incompressible Navier-Stokes equations.
 
-$$\frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} + v\frac{\partial u}{\partial y} = -\frac{1}{\rho}\frac{\partial p}{\partial x} + \nu(\frac{\partial^{2} u}{\partial x^2} + \frac{\partial^{2} u}{\partial y^{2}})$$
+$$
+\frac{\partial u}{\partial t} + u\frac{\partial u}{\partial x} + v\frac{\partial u}{\partial y} = -\frac{1}{\rho}\frac{\partial p}{\partial x} + \nu(\frac{\partial^{2} u}{\partial x^2} + \frac{\partial^{2} u}{\partial y^{2}})
+$$
 
-$$\frac{\partial v}{\partial t} + u\frac{\partial v}{\partial x} + v\frac{\partial v}{\partial y} = -\frac{1}{\rho}\frac{\partial p}{\partial y} + \nu(\frac{\partial^{2} v}{\partial x^2} + \frac{\partial^{2} v}{\partial y^{2}})$$
+$$
+\frac{\partial v}{\partial t} + u\frac{\partial v}{\partial x} + v\frac{\partial v}{\partial y} = -\frac{1}{\rho}\frac{\partial p}{\partial y} + \nu(\frac{\partial^{2} v}{\partial x^2} + \frac{\partial^{2} v}{\partial y^{2}})
+$$
 
 If we can solve these partial differential equations (PDEs) simultaneously after applying requisite boundary conditions, we will obtain the instantaneous velocities and pressure as a function of time, allowing us to predict how the fluid will flow. However, there is no analytical method to solve these equations (in their complete forms) without applying simplifying assumptions. Therefore, we resort to numerical techniques for solving these equations.
 
 ## 3. Numerical Methods ##
 There exist a variety of different numerical methods for solving PDEs, each with its own set of caveats. The simplest method is the Finite Difference method wherein a low-order Taylor series approximation is used to convert the PDEs to a set of algebraic equations. An example is given below that shows how to convert first and second order derivatives to their finite difference approximations.
 
-$$\frac{\partial u}{\partial t} \approx \frac{u(x+\Delta x) - u(x - \Delta x)}{2\Delta x} = \frac{\Delta u}{\Delta x}$$
+$$
+\frac{\partial u}{\partial t} \approx \frac{u(x+\Delta x) - u(x - \Delta x)}{2\Delta x} = \frac{\Delta u}{\Delta x}
+$$
 
-$$\frac{\partial^{2} u}{\partial x^2} \approx \frac{u(x+\Delta x) - 2u(x) + u(x - \Delta x)}{2\Delta x} = \frac{\Delta^2 u}{\Delta x^2}$$
+$$
+\frac{\partial^{2} u}{\partial x^2} \approx \frac{u(x+\Delta x) - 2u(x) + u(x - \Delta x)}{2\Delta x} = \frac{\Delta^2 u}{\Delta x^2}
+$$
 
-While this is not the best method to model fluid flow in all cases, we will proceed with it since it simplifies other aspects of modeling a crystallizer. For more rigorous numerical treatments, you may want to use the the Finite Volume or Finite Element methods.
+While this is not the best method to model fluid flow in all cases, we will proceed with it since it simplifies other aspects of modeling a crystallizer. For more rigorous numerical treatments, you may want to use the the Finite Volume or Finite Element methods (maybe I'll make a separate project utilizing those methods).
 
 ## 4. Code Organization ##
 The code is organized into three different files or scripts. 
@@ -68,3 +78,5 @@ Other Important References:
 - Barba, L. A., & Forsyth, G. F. (2018). CFD Python: the 12 steps to Navier-Stokes equations. Journal of Open Source Education, 2(16), 21.
 - Owkes, M. (2020), A guide to writing your first CFD Solver
 - Ghia, U. K. N. G., Ghia, K. N., & Shin, C. T. (1982). High-Re solutions for incompressible flow using the Navier-Stokes equations and a multigrid method. Journal of computational physics, 48(3), 387–411.
+
+Small note: I do not quite understand some parts of the explanation provided in the article, especially the parts of the code that relate to calculating the derivatives. 
