@@ -112,12 +112,10 @@ stream = ax.streamplot(X[::index_cut_y,::index_cut_x],\
                        color="k")
 fig.colorbar(cont)
 fig.tight_layout()
-
 # ---------------------------------------------- 
 # To animate this plot further, the FuncAnimation function from matplotlib.animation will come in handy. 
 # All it needs is a function that can create a plot for a supplied value of the iteration. 
 # We define such a function called animate.
-
 def animate(i):
     #Print frames left to be added to the animation
     sys.stdout.write("\rFrames remaining: {0:03d}".format(len(sorted_iterations)-i))
@@ -143,13 +141,12 @@ def animate(i):
                             v_p[::index_cut_y,::index_cut_x],\
                             color="k")
     return cont, stream
-
 # ---------------------------------------------- 
 # Finally, it’s time to save the animation and watch some fluids dance around on your computer!
-
 print("######## Making FlowPy Animation ########")
 print("#########################################")
 anim = animation.FuncAnimation(fig, animate, frames=number_of_frames, interval=50, blit=False)
 movie_path = os.path.join(dir_path,"FluidFlowAnimation.mp4")
 anim.save(r"{0}".format(movie_path))
 print("\nAnimation saved as FluidFlowAnimation.mp4 in Result")
+# ---------------------------------------------- 
