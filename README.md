@@ -69,6 +69,29 @@ The code is organized into three different files or scripts.
 - The inputs are provided to this script using the “FlowPy_Input.py” script which acts as a user interface. 
 - Finally, the “FlowPy_Visualizer.py” script is used to animate the dynamics of the flow after running the simulation.
 
+## 5. Implementation
+### Determine the time-step
+### Finite difference scheme
+To solve the equation of continuity and the Navier-Stokes equations simultaneously, we use a predictor-corrector scheme involving the following steps (for more information refer to this guide): https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
+
+- Calculate starred velocities (u* and v*) from initial velocities without the effect of pressure.
+$$ 
+u^{*}(t) = u(t) + \Delta t \left[-u(t)\frac{\Delta u(t)}{\Delta x} - v(t)\frac{\Delta u(t)}{\Delta y} 
++ \nu \left (\frac{\Delta^{2} u(t)}{\Delta x^{2}} + \frac{\Delta^{2} u(t)}{\Delta y^{2}} \right) \right]
+$$
+
+- Iteratively solve the pressure Poisson equation using the starred velocities.
+$$ 
+\frac{\Delta^{2} p(t + \Delta t)}{\Delta x^{2}} + \frac{\Delta^{2} p(t + \Delta t)}{\Delta y^{2}} = -\frac{\rho}{\Delta t} \left(\frac{\Delta u^{*}(t)}{\Delta x} + \frac{\Delta u^{*}(t)}{\Delta y} \right)
+$$
+
+- Calculate the velocities for the next time-step from the pressure and starred velocities.
+$$ 
+u(t + \Delta t) = u^{*}(t) + \Delta t \left(-\frac{1}{\rho} \frac{\Delta p}{\Delta x} \right)
+$$
+
+We define three different functions to carry out each of these three steps.
+
 ## References ##
 This project is mostly based on the project (with the same title as this one) proposed in this article: 
 https://towardsdatascience.com/computational-fluid-dynamics-using-python-modeling-laminar-flow-272dad1ebec
