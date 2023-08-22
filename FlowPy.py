@@ -2,6 +2,7 @@
 import numpy as np
 import os
 
+# ---------------------------------------------- 
 # Mathematically, boundary conditions can be expressed in two forms — Dirichlet and Neumann boundaries. 
 # The former specifies a value of the dependent variable at the boundary 
 # whereas the latter specifies a value for the derivative of the dependent variable at the boundary.
@@ -13,7 +14,7 @@ class Boundary:
     def DefineBoundary(self,boundary_type, boundary_value):
         self.type=boundary_type
         self.value=boundary_value
-
+# ---------------------------------------------- 
 # Next, the domain enclosed by the boundary (like the inside of a pipe) is represented using a 2D mesh or grid 
 # and the values of dependent variables are calculated at the center of boxes in the grid (for pressure) 
 # or at the faces of the boxes (for velocities). This is referred to as a staggered grid approach. 
@@ -66,9 +67,8 @@ class Space:
     def SetSourceTerm(self, S_x = 0, S_y = 0):
         self.S_x = S_x
         self.S_y = S_y
-
+# ---------------------------------------------- 
 # Lastly, we create a class Fluid to represent the properties of the fluid — like density (rho) and viscosity (mu).
-
 class Fluid:
     def __init__(self,rho,mu):
         self.SetFluidProperties(rho,mu)
@@ -77,86 +77,83 @@ class Fluid:
         self.rho=rho
         self.mu=mu
 
-# -------------------------------------------------------------
-
+# ---------------------------------------------- 
 # As in the previous section, we start by writing functions to implement boundary conditions 
 # for the horizontal velocity (u), vertical velocity (v) and pressure (p) at the left, right, top and bottom boundaries 
 # of the 2D domain. This function will accept the objects of the Space and Boundary classes and set boundary conditions 
 # according to the attributes of those objects. For example, if a Boundary object with type Dirichlet and value 0 
 # is passed as the left boundary object, the function will set that condition on the left boundary.
+# Note: The arguments to the function are all objects of our defined classes
 
-#Note: The arguments to the function are all objects of our defined classes
-
-#Set boundary conditions for horizontal velocity
-def SetUBoundary(space, left ,right ,top ,bottom):
+#### Set boundary conditions for horizontal velocity
+def SetUBoundary(space, left, right, top, bottom):
     if(left.type == "D"):
-        space.u[:,0] = left.value
+        space.u[:, 0] = left.value
     elif(left.type == "N"):
-        space.u[:,0] = -left.value * space.dx + space.u[:,1]
+        space.u[:, 0] = -left.value * space.dx + space.u[:, 1]
     
     if(right.type == "D"):
-        space.u[:,-1] = right.value
+        space.u[:, -1] = right.value
     elif(right.type == "N"):
-        space.u[:,-1] = right.value * space.dx + space.u[:,-2]
+        space.u[:, -1] = right.value * space.dx + space.u[:, -2]
         
     if(top.type == "D"):
-        space.u[-1,:] = 2 * top.value - space.u[-2,:]
+        space.u[-1, :] = 2 * top.value - space.u[-2,:]
     elif(top.type=="N"):
-        space.u[-1,:] = -top.value * space.dy + space.u[-2,:]
+        space.u[-1, :] = -top.value * space.dy + space.u[-2, :]
      
     if(bottom.type == "D"):
-        space.u[0,:] = 2 * bottom.value - space.u[1,:]
+        space.u[0, :] = 2 * bottom.value - space.u[1,:]
     elif(bottom.type == "N"):
-        space.u[0,:] = bottom.value * space.dy + space.u[1,:]
-        
-#Set boundary conditions for vertical velocity
+        space.u[0, :] = bottom.value * space.dy + space.u[1,:]
+# ----------------------------------------------      
+#### Set boundary conditions for vertical velocity
 def SetVBoundary(space, left, right, top, bottom):
     if(left.type == "D"):
-        space.v[:,0] = 2 * left.value - space.v[:,1]
+        space.v[:, 0] = 2 * left.value - space.v[:, 1]
     elif(left.type == "N"):
-        space.v[:,0] = -left.value * space.dx + space.v[:,1]
+        space.v[:, 0] = -left.value * space.dx + space.v[:, 1]
     
     if(right.type == "D"):
-        space.v[:,-1] = 2 * right.value - space.v[:,-2]
+        space.v[:, -1] = 2 * right.value - space.v[:, -2]
     elif(right.type == "N"):
-        space.v[:,-1] = right.value * space.dx + space.v[:,-2]
+        space.v[:, -1] = right.value * space.dx + space.v[:, -2]
         
     if(top.type == "D"):
-        space.v[-1,:] = top.value
+        space.v[-1, :] = top.value
     elif(top.type == "N"):
-        space.v[-1,:] = -top.value * space.dy + space.v[-2,:]
+        space.v[-1, :] = -top.value * space.dy + space.v[-2, :]
      
     if(bottom.type == "D"):
-        space.v[0,:] = bottom.value
+        space.v[0, :] = bottom.value
     elif(bottom.type == "N"):
-        space.v[0,:] = bottom.value * space.dy + space.v[1,:]
-    
-#Set boundary conditions for pressure
+        space.v[0, :] = bottom.value * space.dy + space.v[1, :]
+# ---------------------------------------------- 
+#### Set boundary conditions for pressure
 def SetPBoundary(space, left, right, top, bottom):
     if(left.type == "D"):
-        space.p[:,0] = left.value
+        space.p[:, 0] = left.value
     elif(left.type == "N"):
-        space.p[:,0] = -left.value * space.dx + space.p[:,1]
+        space.p[:, 0] = -left.value * space.dx + space.p[:, 1]
     
     if(right.type == "D"):
-        space.p[1,-1] = right.value
+        space.p[1, -1] = right.value
     elif(right.type == "N"):
-        space.p[:,-1] = right.value * space.dx + space.p[:,-2]
+        space.p[:, -1] = right.value * space.dx + space.p[:, -2]
         
     if(top.type == "D"):
-        space.p[-1,:] = top.value
+        space.p[-1, :] = top.value
     elif(top.type == "N"):
-        space.p[-1,:] = -top.value * space.dy + space.p[-2,:]
+        space.p[-1, :] = -top.value * space.dy + space.p[-2, :]
      
     if(bottom.type == "D"):
-        space.p[0,:] = bottom.value
+        space.p[0, :] = bottom.value
     elif(bottom.type == "N"):
-        space.p[0,:] = bottom.value * space.dy + space.p[1,:]
-
+        space.p[0, :] = bottom.value * space.dy + space.p[1, :]
+# ---------------------------------------------- 
 ## To ensure the convergence of finite difference methods, an upper bound on the time-step is 
 ## provided by the Courant–Friedrichs–Lewy (CFL) criterion which is set as the time-step for 
 ## the simulation using the SetTimeStep function. 
-## --------------------------------
 ## Adhering to the CFL criterion ensures that information propagated in a time-step is 
 ## not farther than the distance between two mesh elements.
 
@@ -165,16 +162,15 @@ def SetTimeStep(CFL, space, fluid):
         dt=CFL/np.sum([np.amax(space.u) / space.dx,\
                         np.amax(space.v)/ space.dy])
         
-    #Escape condition if dt is infinity due to zero velocity initially
+    # Escape condition if dt is infinity due to zero velocity initially
     if np.isinf(dt):
         dt = CFL * (space.dx + space.dy)
     space.dt = dt
-
-# ----------------------------------------------------------
+# ---------------------------------------------- 
 # Having determined the time-step, we are now ready to implement the finite difference scheme.
-# We define three different functions to carry out each of these three steps.
+#### We define three different functions to carry out each of these three steps.
 
-#The first function is used to get starred velocities from u and v at timestep t without the effect of pressure
+#### The first function is used to get starred velocities from u and v at timestep t without the effect of pressure
 def GetStarredVelocities(space, fluid):
     # Save object attributes as local variable (with explicit typing for improved readability)
     # from the space and fluid objects, such as the number of rows 
@@ -215,8 +211,8 @@ def GetStarredVelocities(space, fluid):
         +(dt*(mu/rho)*(v2_x + v2_y))+(dt*S_y)
     
     #Save the calculated starred velocities to the space object 
-    space.u_star=u_star.copy()
-    space.v_star=v_star.copy()    
+    space.u_star = u_star.copy()
+    space.v_star = v_star.copy()    
 
 #### The second function is used to iteratively solve the pressure Possion equation from the starred velocities 
 #### to calculate pressure at t+delta_t
@@ -264,9 +260,9 @@ def SolvePressurePoisson(space, fluid, left, right, top, bottom):
         #Escape condition in case solution does not converge after 500 iterations
         if(i > 500):
             tol *= 10
-
-#The third function is used to calculate the velocities at timestep t+delta_t using the pressure at t+delta_t and starred velocities
-
+# ---------------------------------------------- 
+#### The third function is used to calculate the velocities at timestep t+delta_t 
+#### using the pressure at t+delta_t and starred velocities
 def SolveMomentumEquation(space, fluid):
     #Save object attributes as local variable with explicity typing for improved readability
     rows = int(space.rowpts)
@@ -290,18 +286,18 @@ def SolveMomentumEquation(space, fluid):
     p1_y = (p[2:, 1:cols+1] - p[0:rows, 1:cols+1]) / (2*dy)
     #Calculate v at next timestep
     v[1:rows+1, 1:cols+1] = v_star[1:rows+1, 1:cols+1] - (dt/rho) * p1_y
-    
-# convenience function to save the velocities and pressures inside the boundaries to new variables,
+# ---------------------------------------------- 
+# Convenience function to save the velocities and pressures inside the boundaries to new variables,
 # which can then be written to text files.
 def SetCentrePUV(space):
     space.p_c = space.p[1:-1, 1:-1]
     space.u_c = space.u[1:-1, 1:-1]
     space.v_c = space.v[1:-1, 1:-1]
-
-# Finally, we define two functions for I/O purposes — MakeResultDirectory to make a directory 
-# called “Result to store the text files and WriteToFile to save the values of the variables
-# to a text file every few iterations (specified using the interval argument).
-
+# ---------------------------------------------- 
+# Finally, we define two functions for I/O purposes: 
+# - MakeResultDirectory to make a directory called “Result to store the text files
+# - WriteToFile to save the values of the variables to a text file every few iterations 
+#   (specified using the interval argument).
 def MakeResultDirectory(wipe=False):
     #Get path to the Result directory
     cwdir = os.getcwd()
@@ -328,3 +324,4 @@ def WriteToFile(space, iteration, interval):
             for i in range(space.rowpts):
                 for j in range(space.colpts):
                     f.write("{}\t{}\t{}\n".format(space.p_c[i,j],space.u_c[i,j],space.v_c[i,j]))
+# ---------------------------------------------- 
