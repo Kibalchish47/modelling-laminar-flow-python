@@ -1,5 +1,8 @@
 # Basic imports (yeah it's not much)
 import numpy as np
+import numba as nb
+import matplotlib.pyplot as plt
+import matplotlib.cm as cm
 import os
 
 # ---------------------------------------------- 
@@ -12,8 +15,8 @@ class Boundary:
         self.DefineBoundary(boundary_type, boundary_value)
         
     def DefineBoundary(self,boundary_type, boundary_value):
-        self.type=boundary_type
-        self.value=boundary_value
+        self.type = boundary_type
+        self.value = boundary_value
 # ---------------------------------------------- 
 # Next, the domain enclosed by the boundary (like the inside of a pipe) is represented using a 2D mesh or grid 
 # and the values of dependent variables are calculated at the center of boxes in the grid (for pressure) 
@@ -25,7 +28,6 @@ class Boundary:
 class Space:
     def __init__(self):
         pass
-    
     def CreateMesh(self, rowpts, colpts):
         #Domain gridpoints
         self.rowpts = rowpts
@@ -70,13 +72,12 @@ class Space:
 # ---------------------------------------------- 
 # Lastly, we create a class Fluid to represent the properties of the fluid — like density (rho) and viscosity (mu).
 class Fluid:
-    def __init__(self,rho,mu):
-        self.SetFluidProperties(rho,mu)
+    def __init__(self, rho, mu):
+        self.SetFluidProperties(rho, mu)
     
-    def SetFluidProperties(self,rho,mu):
-        self.rho=rho
-        self.mu=mu
-
+    def SetFluidProperties(self, rho, mu):
+        self.rho = rho
+        self.mu = mu
 # ---------------------------------------------- 
 # As in the previous section, we start by writing functions to implement boundary conditions 
 # for the horizontal velocity (u), vertical velocity (v) and pressure (p) at the left, right, top and bottom boundaries 

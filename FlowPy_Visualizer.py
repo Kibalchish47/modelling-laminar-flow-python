@@ -2,16 +2,16 @@
 import numpy as np
 import sys
 import os
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-
+mpl.rcParams['animation.ffmpeg_path'] = r'C:\Users\kibal\OneDrive\Документы'
 # ----------------------------------------------
 # The text files that are generated after running the simulation contain raw numbers 
 # that may not provide a physical picture of the fluid flow by themselves. 
 # However, a simple, animated contour plot can be used to combine the three variables — horizontal velocity, 
 # vertical velocity and pressure — and show their time evolution in an intuitive manner.
 # ----------------------------------------------
-
 # To ensure that arrays of appropriate sizes are created, 
 # simulation inputs pertaining to the computational domain need to be entered.
 #### Simulation inputs
@@ -19,12 +19,10 @@ rowpts = 257
 colpts = 257
 length = 4
 breadth = 4
-
 # ----------------------------------------------
 # Before moving to plotting, the text files that were saved during the simulation have 
 # to be imported as arrays. To do so, we first go through the Result directory, store all the filenames, 
 # and determine the total number of files as well as the printing interval.
-
 #### Go to the Result directory
 cwdir = os.getcwd()
 dir_path = os.path.join(cwdir,"Result")
@@ -47,7 +45,6 @@ final_iter = np.amax(iterations)
 inter = (final_iter - initial_iter) / (len(iterations)-1)
 number_of_frames = len(iterations)
 sorted_iterations = np.sort(iterations)
-
 # ----------------------------------------------
 # Next, we define a function that can import a text file — based on a provided iteration 
 # — into an array using the loadtxt function in numpy.
@@ -72,12 +69,11 @@ def read_datafile(iteration):
     v_arr = arr[:,2]
     
     #Reshape 1D data into 2D
-    p_p=p_arr.reshape((rowpts,colpts))
-    u_p=u_arr.reshape((rowpts,colpts))
-    v_p=v_arr.reshape((rowpts,colpts))
+    p_p = p_arr.reshape((rowpts,colpts))
+    u_p = u_arr.reshape((rowpts,colpts))
+    v_p = v_arr.reshape((rowpts,colpts))
     
     return p_p, u_p, v_p
-
 # ---------------------------------------------- 
 # It’s time to start making the plot! Before animating the figure, it’s a good idea 
 # to make an initial plot (for the zeroth iteration) so that the figure dimensions, axes, 
@@ -147,6 +143,7 @@ print("######## Making FlowPy Animation ########")
 print("#########################################")
 anim = animation.FuncAnimation(fig, animate, frames=number_of_frames, interval=50, blit=False)
 movie_path = os.path.join(dir_path,"FluidFlowAnimation.mp4")
-anim.save(r"{0}".format(movie_path))
-print("\nAnimation saved as FluidFlowAnimation.mp4 in Result")
+writergif = animation.PillowWriter(fps=30) 
+anim.save("FluidFlowAnimation.gif")
+print("\nAnimation saved as FluidFlowAnimation.gif in Result")
 # ---------------------------------------------- 
