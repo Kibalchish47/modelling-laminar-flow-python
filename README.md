@@ -34,7 +34,7 @@ This is the one that will be of our interest in this project, as I am neither ca
 So, what is this set of equations that can completely describe how a fluid flows and where do they come from? Before answering the former question, let’s discuss the latter.
 
 Consider a 2D box having a fixed volume in space. This is what we term the control volume.
-![Alt text](<assets/Figure1 Control Volume.png> "Figure 1: Control Volume")
+![Alt text](<assets/Figure 1 Control Volume.png> "Figure 1: Control Volume")
 
 First, we will apply the principle of conservation of mass to the fluid in the control volume. For an incompressible fluid (most liquids), this means that whatever fluid enters the box must exit it. This is referred to as the equation of continuity in fluid mechanics.
 $$
@@ -158,19 +158,19 @@ The text files that are generated after running the simulation contain raw numbe
 
 #### Imports
 As before, first import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
-See FlowPy_Visualizer.py (lines to ). 
+See FlowPy_Visualizer.py (lines 1 to 7). 
 #### Simulation inputs
 To ensure that arrays of appropriate sizes are created, simulation inputs pertaining to the computational domain need to be entered.
-See FlowPy_Visualizer.py (lines to ). 
+See FlowPy_Visualizer.py (lines 13 to 21). 
 #### Text to array conversion
 Before moving to plotting, the text files that were saved during the simulation have to be imported as arrays. To do so, we first go through the Result directory, store all the filenames, and determine the total number of files as well as the printing interval.
 Next, we define a function that can import a text file — based on a provided iteration — into an array using the loadtxt function in numpy.
-See FlowPy_Visualizer.py (lines to ).
+See FlowPy_Visualizer.py (lines 21 to 75).
 #### Plot and save the animation
 It’s time to start making the plot! Before animating the figure, it’s a good idea to make an initial plot (for the zeroth iteration) so that the figure dimensions, axes, color bar and so on can be fixed. Also, it’s a good idea to make the stream plot with fewer grid points (here, 10) to make the arrows distinguishable.
 To animate this plot further, the FuncAnimation function from matplotlib.animation will come in handy. All it needs is a function that can create a plot for a supplied value of the iteration. We define such a function called animate.
 Finally, save the animation and watch some fluids dance around on your computer!
-See FlowPy_Visualizer.py (lines to ).
+See FlowPy_Visualizer.py (lines 75 to 149).
 
 ## 6. Results ##
 The animated contour and stream plot for the lid cavity benchmark at Re=400 is shown below. It shows the formation of a vortex at the center as the simulation progresses and ultimately, a transition to a steady state.
@@ -179,8 +179,11 @@ The animated contour and stream plot for the lid cavity benchmark at Re=400 is s
 
 A quantitative comparison of the statistics of the steady flow with the results of Ghia et al. (1982) is also performed. Specifically, the horizontal velocities along a vertical line passing through the center of the cavity and vice versa are compared with the simulation results from the paper. The results show reasonable agreement. Deviations can be attributed to the lower accuracy of the finite difference scheme and smaller grid size.
 
-![Alt text]()
-![Alt text]()
+![Alt text](assets/Figure%203.webp)
+Figure 3: Benchmark 1. The blue line represents simulation results and the red points represent results from Ghia et al. (1982).
+
+![Alt text](assets/Figure%204.webp)
+Figure 4: Benchmark 2. The blue line represents simulation results and the red points represent results from Ghia et al. (1982). 
 
 While this tutorial only includes the simulation of the lid cavity test, you can try playing around with the inputs and boundary conditions to model a variety of different single-phase flow problems, like Poiseuille flow in a pipe.
 

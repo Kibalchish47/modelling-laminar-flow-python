@@ -5,7 +5,6 @@ import os
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
-mpl.rcParams['animation.ffmpeg_path'] = r'C:\Users\kibal\OneDrive\Документы'
 # ----------------------------------------------
 # The text files that are generated after running the simulation contain raw numbers 
 # that may not provide a physical picture of the fluid flow by themselves. 
@@ -25,10 +24,10 @@ breadth = 4
 # and determine the total number of files as well as the printing interval.
 #### Go to the Result directory
 cwdir = os.getcwd()
-dir_path = os.path.join(cwdir,"Result")
+dir_path = os.path.join(cwdir, "Result")
 os.chdir(dir_path)
 
-# Go through files in the directory and store filenames
+#### Go through files in the directory and store filenames
 filenames = []
 iterations = []
 for root,dirs,files in os.walk(dir_path):
@@ -39,16 +38,15 @@ for root,dirs,files in os.walk(dir_path):
             iter_no = int(no_ext_file.split("V")[-1])
             iterations.append(iter_no)
 
-# Discern the final iteration and interval
+#### Discern the final iteration and interval
 initial_iter = np.amin(iterations)            
 final_iter = np.amax(iterations)
 inter = (final_iter - initial_iter) / (len(iterations) - 1)
 number_of_frames = len(iterations)
 sorted_iterations = np.sort(iterations)
 # ----------------------------------------------
-# Next, we define a function that can import a text file — based on a provided iteration 
-# — into an array using the loadtxt function in numpy.
-
+#### Next, we define a function that can import a text file — based on a provided iteration 
+#### — into an array using the loadtxt function in numpy.
 def read_datafile(iteration):
     #Set filename and path according to given iteration
     filename = "PUV{0}.txt".format(iteration)
@@ -80,20 +78,20 @@ def read_datafile(iteration):
 # color bar and so on can be fixed. Also, it’s a good idea to make the stream plot with 
 # fewer grid points (in this article, 10) to make the arrows distinguishable.
 
-# Create mesh for X and Y inputs to the figure
+#### Create mesh for X and Y inputs to the figure
 x = np.linspace(0, length, colpts)
 y = np.linspace(0, breadth, rowpts)
 [X,Y] = np.meshgrid(x, y)
 
-# Determine indexing for stream plot (10 points only)
+#### Determine indexing for stream plot (10 points only)
 index_cut_x = int(colpts/10)
 index_cut_y = int(rowpts/10)
 
-# Create blank figure
+#### Create blank figure
 fig = plt.figure(figsize=(16, 8))
 ax = plt.axes(xlim=(0,length), ylim=(0, breadth))
 
-# Create initial contour and stream plot as well as color bar
+#### Create initial contour and stream plot as well as color bar
 p_p, u_p, v_p = read_datafile(0)
 ax.set_xlim([0, length])
 ax.set_ylim([0, breadth])
@@ -111,7 +109,7 @@ fig.tight_layout()
 # ---------------------------------------------- 
 # To animate this plot further, the FuncAnimation function from matplotlib.animation will come in handy. 
 # All it needs is a function that can create a plot for a supplied value of the iteration. 
-# We define such a function called animate.
+#### We define such a function called animate.
 def animate(i):
     #Print frames left to be added to the animation
     sys.stdout.write("\rFrames remaining: {0:03d}".format(len(sorted_iterations)-i))
@@ -138,12 +136,14 @@ def animate(i):
                             color="k")
     return cont, stream
 # ---------------------------------------------- 
-# Finally, it’s time to save the animation and watch some fluids dance around on your computer!
+#### Finally, it’s time to save the animation and watch some fluids dance around on your computer!
 print("#################  FlowPy Animation  #################")
 print("######################################################")
+
 anim = animation.FuncAnimation(fig, animate, frames=number_of_frames, interval=50, blit=False)
 movie_path = os.path.join(dir_path, "FluidFlowAnimation.mp4")
 writergif = animation.PillowWriter(fps=30) 
 anim.save("FluidFlowAnimation.gif")
+
 print("\nAnimation saved as FluidFlowAnimation.gif in Result")
 # ---------------------------------------------- 
