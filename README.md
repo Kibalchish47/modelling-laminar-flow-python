@@ -13,6 +13,27 @@ Table of Contents:
 3. [Numerical Methods](#3-numerical-methods)
 4. [Code Organization](#4-code-organization)
 5. [Implementation](#5-implementation)
+    - [Build Classes](#build-classes)
+        - [Define (Mathematically) the Boundary](#define-mathematically-the-boundary)
+        - [Define Domain enclosed by the Boundary](#define-domain-enclosed-by-the-boundary)
+        - [Define Fluid Class](#define-fluid-class)
+    - [Write Functions to Implement the Finite Difference Method](#write-functions-to-implement-the-finite-difference-method)
+        - [Set boundary conditions for horizontal velocity](#set-boundary-conditions-for-horizontal-velocity)
+        - [Set boundary conditions for vertical velocity](#set-boundary-conditions-for-vertical-velocity)
+        - [Set boundary conditions for pressure](#set-boundary-conditions-for-pressure)
+        - [Determine the time-step](#determine-the-time-step)
+        - [Finite difference scheme](#finite-difference-scheme)
+        - [Convenience Function](#convenience-function)
+        - [I/O Functions](#io-functions)
+    - [The Simulation User Interface: FlowPy_Input](#the-simulation-user-interface--flowpy_input)
+        - [Imports](#flowpy_inputpy-imports)
+        - [Define spacial, temporal, physical and momentum parameters](#define-spacial-temporal-physical-and-momentum-parameters)
+        - [Write the simulation loop](#write-the-simulation-loop)
+    - [The Visualization Tool: FlowPy_Visualizer](#the-visualization-tool--flowpy_visualizer)
+        - [Imports](#flowpy_visualizerpy-imports)
+        - [Simulation inputs](#simulation-inputs)
+        - [Text to array conversion](#text-to-array-conversion)
+        - [Plot and save the animation](#plot-and-save-the-animation)
 6. [Results](#6-results)
 7. [Known issues](#7--known-issues)
 8. [References](#references)
@@ -35,7 +56,7 @@ So, what is this set of equations that can completely describe how a fluid flows
 
 Consider a 2D box having a fixed volume in space. This is what we term the control volume.
 ![Alt text](<Assets/Figure 1 Control Volume.png> "Figure 1: Control Volume")
-Figure 1: Control Volume
+Figure 1: Control Volume.
 
 First, we will apply the principle of conservation of mass to the fluid in the control volume. For an incompressible fluid (most liquids), this means that whatever fluid enters the box must exit it. This is referred to as the equation of continuity in fluid mechanics.
 $$
@@ -69,7 +90,7 @@ While this is not the best method to model fluid flow in all cases, we will proc
 
 ## 4. Code Organization ##
 The code is organized into three different files or scripts. 
-- The first — “FlowPy.ipynb” — contains the code for the solution of the PDEs using the finite difference method for a general set of inputs. 
+- The first — “FlowPy.py” — contains the code for the solution of the PDEs using the finite difference method for a general set of inputs. 
 - The inputs are provided to this script using the “FlowPy_Input.py” script which acts as a user interface. 
 - Finally, the “FlowPy_Visualizer.py” script is used to animate the dynamics of the flow after running the simulation.
 
@@ -133,7 +154,7 @@ As an example, inputs relevant to the Lid Cavity Test (at Reynolds Number=400) a
 
 ![Alt text](<Assets/Figure 2 Lid Cavity Problem set-up.png> "Figure 2: Lid Cavity Problem set-up")
 Figure 2: Lid Cavity Problem set-up
-#### Imports
+#### FlowPy_Input.py Imports
 First, we import required modules and this now includes all the things that we have defined in FlowPy.py
 See FlowPy_Input.py (lines 1 to 6). 
 #### Define spacial, temporal, physical and momentum parameters
@@ -154,10 +175,11 @@ Now, we can write the loop to run the simulation. The general procedure is as fo
 - Advance time by a value equal to the time-step
 See FlowPy_Input.py (lines 48 to 101)
 Having reached here, we are now ready to run the simulation for any generalized set of inputs. There’s just one piece of the puzzle left — a visualization tool.
+
 ### The Visualization Tool — FlowPy_Visualizer
 The text files that are generated after running the simulation contain raw numbers that may not provide a physical picture of the fluid flow by themselves. However, a simple, animated contour plot can be used to combine the three variables — horizontal velocity, vertical velocity and pressure — and show their time evolution in an intuitive manner.
 
-#### Imports
+#### FlowPy_Visualizer.py Imports
 As before, first import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
 See FlowPy_Visualizer.py (lines 1 to 7). 
 #### Simulation inputs
