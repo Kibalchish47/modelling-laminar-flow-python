@@ -21,8 +21,8 @@ rowpts = 257 #Number of grid points in the y-direction
 
 #Create an object of the class Space called cavity
 cavity = Space()
-cavity.CreateMesh(rowpts,colpts)
-cavity.SetDeltas(breadth,length)
+cavity.CreateMesh(rowpts, colpts)
+cavity.SetDeltas(breadth, length)
 # ---------------------------------------------- 
 #### FLUID PROPERTIES
 rho = 1 #Density of fluid

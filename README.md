@@ -12,7 +12,10 @@ Table of Contents:
 2. [Governing Equations](#2-governing-equations)
 3. [Numerical Methods](#3-numerical-methods)
 4. [Code Organization](#4-code-organization)
-5. [References](#references)
+5. [Implementation](#5-implementation)
+6. [Results](#6-results)
+7. [Known issues](#7--known-issues)
+8. [References](#references)
 
 Let us now get a better feeling for the topic!
 
@@ -70,9 +73,32 @@ The code is organized into three different files or scripts.
 - Finally, the “FlowPy_Visualizer.py” script is used to animate the dynamics of the flow after running the simulation.
 
 ## 5. Implementation
-### Determine the time-step
-### Finite difference scheme
-To solve the equation of continuity and the Navier-Stokes equations simultaneously, we use a predictor-corrector scheme involving the following steps (for more information refer to this guide): https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
+### Build Classes
+We start by making classes for specific properties of the problem, starting with the boundary condition. The PDEs are solved by applying certain boundary conditions which indicate how the fluid will behave at the boundaries of the domain. For example, fluid flowing through a pipe will have a wall with zero fluid velocity and an entry as well as exit with some specified flow velocity.
+#### Define (Mathematically) the Boundary 
+Mathematically, boundary conditions can be expressed in two forms — Dirichlet and Neumann boundaries. The former specifies a value of the dependent variable at the boundary whereas the latter specifies a value for the derivative of the dependent variable at the boundary.Therefore, we make a Boundary class that has two properties — type and value.
+See FlowPy.py (lines 7 to 19).
+#### Define Domain enclosed by the Boundary
+Next, the domain enclosed by the boundary (like the inside of a pipe) is represented using a 2D mesh or grid and the values of dependent variables are calculated at the center of boxes in the grid (for pressure) or at the faces of the boxes (for velocities). This is referred to as a staggered grid approach. To represent the mesh, we create a class called Space. The method CreateMesh creates a matrix of given size for the dependent variables and the SetDeltas method calculates the values of the differential lengths based on the specified length and breadth of the domain.   
+See FlowPy.py (lines 19 to 71).
+
+#### Define Fluid Class
+Lastly, we create a class Fluid to represent the properties of the fluid — like density (rho) and viscosity (mu).
+See FlowPy.py (lines 71 to 80).
+
+### Write Functions to Implement the Finite Difference Method
+As in the previous section, we start by writing functions to implement boundary conditions for the horizontal velocity (u), vertical velocity (v) and pressure (p) at the left, right, top and bottom boundaries of the 2D domain. This function will accept the objects of the Space and Boundary classes and set boundary conditions according to the attributes of those objects. For example, if a Boundary object with type Dirichlet and value 0 is passed as the left boundary object, the function will set that condition on the left boundary.
+#### Set boundary conditions for horizontal velocity
+See FlowPy.py (lines 89 to 108).
+#### Set boundary conditions for vertical velocity
+See FlowPy.py (lines 71 to 80).
+#### Set boundary conditions for pressure
+See FlowPy.py (lines 71 to 80).
+#### Determine the time-step
+Before we write the finite difference functions, we need to determine a time-step to advance the simulation by. To ensure the convergence of finite difference methods, an upper bound on the time-step is provided by the Courant–Friedrichs–Lewy (CFL) criterion which is set as the time-step for the simulation using the SetTimeStep function. Adhering to the CFL criterion ensures that information propagated in a time-step is not farther than the distance between two mesh elements.
+See FlowPy.py (lines 153 to 168).
+#### Finite difference scheme
+Having determined the time-step, we are now ready to implement the finite difference scheme. To solve the equation of continuity and the Navier-Stokes equations simultaneously, we use a predictor-corrector scheme involving the following steps (for more information refer to this guide): https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
 
 - Calculate starred velocities (u* and v*) from initial velocities without the effect of pressure.
 $$ 
@@ -91,15 +117,85 @@ u(t + \Delta t) = u^{*}(t) + \Delta t \left(-\frac{1}{\rho} \frac{\Delta p}{\Del
 $$
 
 We define three different functions to carry out each of these three steps.
+See FlowPy.py (lines 169 to 288). 
+#### Convenience Function
+Further, a convenience function is defined to save the velocities and pressures inside the boundaries to new variables, which can then be written to text files.
+See FlowPy.py (lines 288 to 295).
+#### I/O Functions
+Finally, we define two functions for I/O purposes — MakeResultDirectory to make a directory called “Result” to store the text files and WriteToFile to save the values of the variables to a text file every few iterations (specified using the interval argument).
+See FlowPy.py (lines 295 to 325).
 
-## References ##
-This project is mostly based on the project (with the same title as this one) proposed in this article: 
-https://towardsdatascience.com/computational-fluid-dynamics-using-python-modeling-laminar-flow-272dad1ebec
+### The Simulation User Interface — FlowPy_Input
+This section is shorter than the previous one — most of the heavy lifting has been done, we just need to make use of all the defined classes and functions to run the simulation now!
+
+As an example, inputs relevant to the Lid Cavity Test (at Reynolds Number=400) are entered in this tutorial. In this test, fluid is kept in a 2D box with three rigid walls and the fourth wall (or the lid) is moved at a uniform velocity. Once steady state is reached, statistics of the developed flow field can be compared to a benchmark.
+
+![Alt text](<assets/Figure 2 Lid Cavity Problem set-up.png> "Figure 2: Figure 2 Lid Cavity Problem set-up")
+
+#### Imports
+First, we import required modules and this now includes all the things that we have defined in FlowPy.py
+See FlowPy_Input.py (lines 1 to 6). 
+#### Define spacial, temporal, physical and momentum parameters
+We begin by specifying input variables describing the domain and then creating a Space object with these variables.
+Next, the density and viscosity of the fluid are specified, and an object of the class Fluid is created.
+Third, we create Boundary objects to set velocity and pressure boundary conditions.
+Finally, simulation parameters and flags are specified that control simulation time, saving text files, and so forth.
+See FlowPy_Input.py (lines 13 to 48). 
+
+#### Write the simulation loop
+Now, we can write the loop to run the simulation. The general procedure is as follows. Until the simulation time is completed, do the following in every iteration:
+- Set the time-step according to the CFL number criterion
+- Set boundary conditions
+- Calculate starred velocities
+- Solve the pressure Poisson equation to get the pressure field
+- Determine velocities at the next time-step
+- Write results to file (if file flag is 1)
+- Advance time by a value equal to the time-step
+See FlowPy_Input.py (lines 48 to 101)
+Having reached here, we are now ready to run the simulation for any generalized set of inputs. There’s just one piece of the puzzle left — a visualization tool.
+### The Visualization Tool — FlowPy_Visualizer
+The text files that are generated after running the simulation contain raw numbers that may not provide a physical picture of the fluid flow by themselves. However, a simple, animated contour plot can be used to combine the three variables — horizontal velocity, vertical velocity and pressure — and show their time evolution in an intuitive manner.
+
+#### Imports
+As before, first import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
+See FlowPy_Visualizer.py (lines to ). 
+#### Simulation inputs
+To ensure that arrays of appropriate sizes are created, simulation inputs pertaining to the computational domain need to be entered.
+See FlowPy_Visualizer.py (lines to ). 
+#### Text to array conversion
+Before moving to plotting, the text files that were saved during the simulation have to be imported as arrays. To do so, we first go through the Result directory, store all the filenames, and determine the total number of files as well as the printing interval.
+Next, we define a function that can import a text file — based on a provided iteration — into an array using the loadtxt function in numpy.
+See FlowPy_Visualizer.py (lines to ).
+#### Plot and save the animation
+It’s time to start making the plot! Before animating the figure, it’s a good idea to make an initial plot (for the zeroth iteration) so that the figure dimensions, axes, color bar and so on can be fixed. Also, it’s a good idea to make the stream plot with fewer grid points (here, 10) to make the arrows distinguishable.
+To animate this plot further, the FuncAnimation function from matplotlib.animation will come in handy. All it needs is a function that can create a plot for a supplied value of the iteration. We define such a function called animate.
+Finally, save the animation and watch some fluids dance around on your computer!
+See FlowPy_Visualizer.py (lines to ).
+
+## 6. Results ##
+The animated contour and stream plot for the lid cavity benchmark at Re=400 is shown below. It shows the formation of a vortex at the center as the simulation progresses and ultimately, a transition to a steady state.
+
+![Alt text](Result/FluidFlowAnimation.gif)
+
+A quantitative comparison of the statistics of the steady flow with the results of Ghia et al. (1982) is also performed. Specifically, the horizontal velocities along a vertical line passing through the center of the cavity and vice versa are compared with the simulation results from the paper. The results show reasonable agreement. Deviations can be attributed to the lower accuracy of the finite difference scheme and smaller grid size.
+
+![Alt text]()
+![Alt text]()
+
+While this tutorial only includes the simulation of the lid cavity test, you can try playing around with the inputs and boundary conditions to model a variety of different single-phase flow problems, like Poiseuille flow in a pipe.
+
+With the creation and validation of FlowPy, we can move to the next step in the modeling of a crystallizer — addition of heat and mass transfer to the solver, which will be covered in the next article.
+## 7. Known Issues ##
+There aren't much issues with the project, but here are some I encountered (and you need to be aware of too): 
+- Some parts of the code are extremely bulky, especially the ones involving heavy computation (NumPy)
+- It took a while to make the simulation save properly. If you have any issues with saving the simulation, check out this tutorial: https://holypython.com/how-to-save-matplotlib-animations-the-ultimate-guide/?expand_article=1
+
+## 8. References ##
+This project is purely based on the project (with the same title as this one) proposed in this article: 
+https://towardsdatascience.com/computational-fluid-dynamics-using-python-modeling-laminar-flow-272dad1ebec. The article's code is also available on GitHub: https://github.com/gauravsdeshmukh/FlowPy/tree/master. 
 
 Other Important References:
 
 - Barba, L. A., & Forsyth, G. F. (2018). CFD Python: the 12 steps to Navier-Stokes equations. Journal of Open Source Education, 2(16), 21.
 - Owkes, M. (2020), A guide to writing your first CFD Solver
-- Ghia, U. K. N. G., Ghia, K. N., & Shin, C. T. (1982). High-Re solutions for incompressible flow using the Navier-Stokes equations and a multigrid method. Journal of computational physics, 48(3), 387–411.
-
-Small note: I do not quite understand some parts of the explanation provided in the article, especially the parts of the code that relate to calculating the derivatives. 
+- Ghia, U. K. N. G., Ghia, K. N., & Shin, C. T. (1982). High-Re solutions for incompressible flow using the Navier-Stokes equations and a multigrid method. Journal of computational physics, 48(3), 387–411. 

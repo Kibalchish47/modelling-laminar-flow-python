@@ -4,7 +4,6 @@ import numba as nb
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
 import os
-
 # ---------------------------------------------- 
 # Mathematically, boundary conditions can be expressed in two forms — Dirichlet and Neumann boundaries. 
 # The former specifies a value of the dependent variable at the boundary 
@@ -14,7 +13,7 @@ class Boundary:
     def __init__(self, boundary_type, boundary_value):
         self.DefineBoundary(boundary_type, boundary_value)
         
-    def DefineBoundary(self,boundary_type, boundary_value):
+    def DefineBoundary(self, boundary_type, boundary_value):
         self.type = boundary_type
         self.value = boundary_value
 # ---------------------------------------------- 
@@ -34,8 +33,8 @@ class Space:
         self.colpts = colpts
         
         #Velocity matrices
-        self.u = np.zeros((self.rowpts+2, self.colpts + 2))
-        self.v = np.zeros((self.rowpts+2, self.colpts + 2))
+        self.u = np.zeros((self.rowpts + 2, self.colpts + 2))
+        self.v = np.zeros((self.rowpts + 2, self.colpts + 2))
         
         self.u_star = np.zeros((self.rowpts + 2, self.colpts + 2))
         self.v_star = np.zeros((self.rowpts + 2, self.colpts + 2))
@@ -58,13 +57,13 @@ class Space:
         self.dy = breadth / (self.rowpts - 1)
         
     def SetInitialU(self, U):
-        self.u=U*self.u
+        self.u = U * self.u
         
     def SetInitialV(self, V):
-        self.v=V*self.v
+        self.v = V * self.v
         
     def SetInitialP(self, P):
-        self.p=P*self.p
+        self.p = P * self.p
         
     def SetSourceTerm(self, S_x = 0, S_y = 0):
         self.S_x = S_x
@@ -85,7 +84,7 @@ class Fluid:
 # according to the attributes of those objects. For example, if a Boundary object with type Dirichlet and value 0 
 # is passed as the left boundary object, the function will set that condition on the left boundary.
 # Note: The arguments to the function are all objects of our defined classes
-
+# ---------------------------------------------- 
 #### Set boundary conditions for horizontal velocity
 def SetUBoundary(space, left, right, top, bottom):
     if(left.type == "D"):
@@ -170,7 +169,6 @@ def SetTimeStep(CFL, space, fluid):
 # ---------------------------------------------- 
 # Having determined the time-step, we are now ready to implement the finite difference scheme.
 #### We define three different functions to carry out each of these three steps.
-
 #### The first function is used to get starred velocities from u and v at timestep t without the effect of pressure
 def GetStarredVelocities(space, fluid):
     # Save object attributes as local variable (with explicit typing for improved readability)
@@ -288,17 +286,17 @@ def SolveMomentumEquation(space, fluid):
     #Calculate v at next timestep
     v[1:rows+1, 1:cols+1] = v_star[1:rows+1, 1:cols+1] - (dt/rho) * p1_y
 # ---------------------------------------------- 
-# Convenience function to save the velocities and pressures inside the boundaries to new variables,
-# which can then be written to text files.
+#### Convenience function to save the velocities and pressures inside the boundaries to new variables,
+#### which can then be written to text files.
 def SetCentrePUV(space):
     space.p_c = space.p[1:-1, 1:-1]
     space.u_c = space.u[1:-1, 1:-1]
     space.v_c = space.v[1:-1, 1:-1]
 # ---------------------------------------------- 
 # Finally, we define two functions for I/O purposes: 
-# - MakeResultDirectory to make a directory called “Result to store the text files
-# - WriteToFile to save the values of the variables to a text file every few iterations 
-#   (specified using the interval argument).
+#### - MakeResultDirectory to make a directory called “Result to store the text files
+#### - WriteToFile to save the values of the variables to a text file every few iterations 
+####   (specified using the interval argument).
 def MakeResultDirectory(wipe=False):
     #Get path to the Result directory
     cwdir = os.getcwd()
@@ -313,7 +311,6 @@ def MakeResultDirectory(wipe=False):
             filelist = os.listdir()
             for file in filelist:
                 os.remove(file)
-    
     os.chdir(cwdir)           
     
 def WriteToFile(space, iteration, interval):
