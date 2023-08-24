@@ -34,7 +34,8 @@ This is the one that will be of our interest in this project, as I am neither ca
 So, what is this set of equations that can completely describe how a fluid flows and where do they come from? Before answering the former question, let’s discuss the latter.
 
 Consider a 2D box having a fixed volume in space. This is what we term the control volume.
-![Alt text](<assets/Figure 1 Control Volume.png> "Figure 1: Control Volume")
+![Alt text](<Assets/Figure 1 Control Volume.png> "Figure 1: Control Volume")
+Figure 1: Control Volume
 
 First, we will apply the principle of conservation of mass to the fluid in the control volume. For an incompressible fluid (most liquids), this means that whatever fluid enters the box must exit it. This is referred to as the equation of continuity in fluid mechanics.
 $$
@@ -130,8 +131,8 @@ This section is shorter than the previous one — most of the heavy lifting has 
 
 As an example, inputs relevant to the Lid Cavity Test (at Reynolds Number=400) are entered in this tutorial. In this test, fluid is kept in a 2D box with three rigid walls and the fourth wall (or the lid) is moved at a uniform velocity. Once steady state is reached, statistics of the developed flow field can be compared to a benchmark.
 
-![Alt text](<assets/Figure 2 Lid Cavity Problem set-up.png> "Figure 2: Figure 2 Lid Cavity Problem set-up")
-
+![Alt text](<Assets/Figure 2 Lid Cavity Problem set-up.png> "Figure 2: Lid Cavity Problem set-up")
+Figure 2: Lid Cavity Problem set-up
 #### Imports
 First, we import required modules and this now includes all the things that we have defined in FlowPy.py
 See FlowPy_Input.py (lines 1 to 6). 
@@ -175,14 +176,14 @@ See FlowPy_Visualizer.py (lines 75 to 149).
 ## 6. Results ##
 The animated contour and stream plot for the lid cavity benchmark at Re=400 is shown below. It shows the formation of a vortex at the center as the simulation progresses and ultimately, a transition to a steady state.
 
-![Alt text](Result/FluidFlowAnimation.gif)
+![Alt text](Result/FluidFlowAnimation.gif, "Resulting plot")
 
 A quantitative comparison of the statistics of the steady flow with the results of Ghia et al. (1982) is also performed. Specifically, the horizontal velocities along a vertical line passing through the center of the cavity and vice versa are compared with the simulation results from the paper. The results show reasonable agreement. Deviations can be attributed to the lower accuracy of the finite difference scheme and smaller grid size.
 
-![Alt text](assets/Figure%203.webp)
+![Alt text](Assets/Figure%203.webp, "Figure 3: Benchmark 1. The blue line represents simulation results and the red points represent results from Ghia et al. (1982).")
 Figure 3: Benchmark 1. The blue line represents simulation results and the red points represent results from Ghia et al. (1982).
 
-![Alt text](assets/Figure%204.webp)
+![Alt text](Assets/Figure%204.webp, "Figure 4: Benchmark 2. The blue line represents simulation results and the red points represent results from Ghia et al. (1982).")
 Figure 4: Benchmark 2. The blue line represents simulation results and the red points represent results from Ghia et al. (1982). 
 
 While this tutorial only includes the simulation of the lid cavity test, you can try playing around with the inputs and boundary conditions to model a variety of different single-phase flow problems, like Poiseuille flow in a pipe.
