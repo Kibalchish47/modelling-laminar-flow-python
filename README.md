@@ -7,6 +7,9 @@ The Navier-Stokes equations and the continuity equation are discretized using a 
 - Differentitate the momentum equation (with the pressure term) and apply continuity to eliminate next time-step velocities. Thus, we are left with a Poisson equation for pressure in terms of the starred velocities. This step gives the pressure field for the next time-step.
 - Calculate divergence-free velocities for the next time-step using the newly calculated pressure field and the starred velocities in a corrector step.
 
+The Result:
+![Alt text](Result/FluidFlowAnimation.gif)
+
 Table of Contents: 
 1. [Introduction](#1-introduction)
 2. [Governing Equations](#2-governing-equations)
