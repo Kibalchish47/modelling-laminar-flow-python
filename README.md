@@ -2,9 +2,9 @@
 ## The Project
 This project aims to solve the 2D Navier-Stokes equations using the finite difference method for single-phase laminar flow and verify results using the benchmark lid cavity test (with NumPy vectorization for better performance).
 
-The Navier-Stokes equations and the continuity equation are discretized using a second order finite difference method and solved numerically. To ensure a divergence free velocity at the end of each time step, the process of calculating velocity and pressure is as follows:
-- Calculate intermediate starred velocities that may not necessarily be divergence free by solving the momentum equation without the pressure term. This is the predictor step.
-- Differentitate the momentum equation (with the pressure term) and apply continuity to eliminate next time-step velocities. Thus, we are left with a Poisson equation for pressure in terms of the starred velocities. This step gives the pressure field for the next time-step.
+The Navier-Stokes equations and the continuity equation are discretized using a second-order finite difference method and solved numerically. To ensure a divergence-free velocity at the end of each time step, the process of calculating velocity and pressure is as follows:
+- Calculate intermediate starred velocities that may not necessarily be divergence-free by solving the momentum equation without the pressure term. This is the predictor step.
+- Differentiate the momentum equation (with the pressure term) and apply continuity to eliminate next time-step velocities. Thus, we are left with a Poisson equation for pressure in terms of the starred velocities. This step gives the pressure field for the next time step.
 - Calculate divergence-free velocities for the next time-step using the newly calculated pressure field and the starred velocities in a corrector step.
 
 The Result:
@@ -30,7 +30,7 @@ Table of Contents:
         - [I/O Functions](#io-functions)
     - [The Simulation User Interface: FlowPy_Input](#the-simulation-user-interface--flowpy_input)
         - [Imports](#flowpy_inputpy-imports)
-        - [Define spacial, temporal, physical and momentum parameters](#define-spacial-temporal-physical-and-momentum-parameters)
+        - [Define spatial, temporal, physical, and momentum parameters](#define-spacial-temporal-physical-and-momentum-parameters)
         - [Write the simulation loop](#write-the-simulation-loop)
     - [The Visualization Tool: FlowPy_Visualizer](#the-visualization-tool--flowpy_visualizer)
         - [Imports](#flowpy_visualizerpy-imports)
@@ -52,10 +52,10 @@ The analytical approach involves deriving mathematical equations, such as the Na
 
 The numerical approach, known as Computational Fluid Dynamics (CFD), uses powerful computers to simulate and predict fluid flow by solving the equations numerically. CFD allows researchers to study a wide range of complex flow scenarios and optimize designs. It is particularly useful for preventing undesired fluid interactions, such as coffee spills, by analyzing flow dynamics and recommending modifications. 
 
-This is the one that will be of our interest in this project, as I am neither capable nor willing to do experimental approach or to analytically solve the Navier-Stokes equations (if that's even possible).
+This is the one that will be of interest in this project, as I am neither capable nor willing to do an experimental approach or to analytically solve the Navier-Stokes equations (if that's even possible).
 
 ## 2. Governing Equations ##
-So, what is this set of equations that can completely describe how a fluid flows and where do they come from? Before answering the former question, let’s discuss the latter.
+So, what is this set of equations that can completely describe how a fluid flows, and where do they come from? Before answering the former question, let’s discuss the latter.
 
 Consider a 2D box having a fixed volume in space. This is what we term the control volume.
 ![Alt text](<Assets/Figure 1 Control Volume.png> "Figure 1: Control Volume")
@@ -79,7 +79,7 @@ $$
 If we can solve these partial differential equations (PDEs) simultaneously after applying requisite boundary conditions, we will obtain the instantaneous velocities and pressure as a function of time, allowing us to predict how the fluid will flow. However, there is no analytical method to solve these equations (in their complete forms) without applying simplifying assumptions. Therefore, we resort to numerical techniques for solving these equations.
 
 ## 3. Numerical Methods ##
-There exist a variety of different numerical methods for solving PDEs, each with its own set of caveats. The simplest method is the Finite Difference method wherein a low-order Taylor series approximation is used to convert the PDEs to a set of algebraic equations. An example is given below that shows how to convert first and second order derivatives to their finite difference approximations.
+There exist a variety of different numerical methods for solving PDEs, each with its own set of caveats. The simplest method is the Finite Difference method wherein a low-order Taylor series approximation is used to convert the PDEs to a set of algebraic equations. An example is given below that shows how to convert first and second-order derivatives to their finite difference approximations.
 
 $$
 \frac{\partial u}{\partial t} \approx \frac{u(x+\Delta x) - u(x - \Delta x)}{2\Delta x} = \frac{\Delta u}{\Delta x}
@@ -89,7 +89,7 @@ $$
 \frac{\partial^{2} u}{\partial x^2} \approx \frac{u(x+\Delta x) - 2u(x) + u(x - \Delta x)}{2\Delta x} = \frac{\Delta^2 u}{\Delta x^2}
 $$
 
-While this is not the best method to model fluid flow in all cases, we will proceed with it since it simplifies other aspects of modeling a crystallizer. For more rigorous numerical treatments, you may want to use the the Finite Volume or Finite Element methods (maybe I'll make a separate project utilizing those methods).
+While this is not the best method to model fluid flow in all cases, we will proceed with it since it simplifies other aspects of modeling a crystallizer. For more rigorous numerical treatments, you may want to use the Finite Volume or Finite Element methods (maybe I'll make a separate project utilizing those methods).
 
 ## 4. Code Organization ##
 The code is organized into three different files or scripts. 
@@ -99,16 +99,16 @@ The code is organized into three different files or scripts.
 
 ## 5. Implementation
 ### Build Classes
-We start by making classes for specific properties of the problem, starting with the boundary condition. The PDEs are solved by applying certain boundary conditions which indicate how the fluid will behave at the boundaries of the domain. For example, fluid flowing through a pipe will have a wall with zero fluid velocity and an entry as well as exit with some specified flow velocity.
+We start by making classes for specific properties of the problem, starting with the boundary condition. The PDEs are solved by applying certain boundary conditions which indicate how the fluid will behave at the boundaries of the domain. For example, fluid flowing through a pipe will have a wall with zero fluid velocity and an entry as well as an exit with some specified flow velocity.
 #### Define (Mathematically) the Boundary 
-Mathematically, boundary conditions can be expressed in two forms — Dirichlet and Neumann boundaries. The former specifies a value of the dependent variable at the boundary whereas the latter specifies a value for the derivative of the dependent variable at the boundary.Therefore, we make a Boundary class that has two properties — type and value.
+Mathematically, boundary conditions can be expressed in two forms — Dirichlet and Neumann boundaries. The former specifies a value of the dependent variable at the boundary whereas the latter specifies a value for the derivative of the dependent variable at the boundary. Therefore, we make a Boundary class that has two properties — type and value.
 See FlowPy.py (lines 7 to 19).
 #### Define Domain enclosed by the Boundary
-Next, the domain enclosed by the boundary (like the inside of a pipe) is represented using a 2D mesh or grid and the values of dependent variables are calculated at the center of boxes in the grid (for pressure) or at the faces of the boxes (for velocities). This is referred to as a staggered grid approach. To represent the mesh, we create a class called Space. The method CreateMesh creates a matrix of given size for the dependent variables and the SetDeltas method calculates the values of the differential lengths based on the specified length and breadth of the domain.   
+Next, the domain enclosed by the boundary (like the inside of a pipe) is represented using a 2D mesh or grid, and the values of dependent variables are calculated at the center of boxes in the grid (for pressure) or at the faces of the boxes (for velocities). This is referred to as a staggered grid approach. To represent the mesh, we create a class called Space. The method CreateMesh creates a matrix of given size for the dependent variables and the SetDeltas method calculates the values of the differential lengths based on the specified length and breadth of the domain.   
 See FlowPy.py (lines 19 to 71).
 
 #### Define Fluid Class
-Lastly, we create a class Fluid to represent the properties of the fluid — like density (rho) and viscosity (mu).
+Lastly, we create a class Fluid to represent the properties of the fluid—like density (rho) and viscosity (mu).
 See FlowPy.py (lines 71 to 80).
 
 ### Write Functions to Implement the Finite Difference Method
@@ -120,10 +120,10 @@ See FlowPy.py (lines 71 to 80).
 #### Set boundary conditions for pressure
 See FlowPy.py (lines 71 to 80).
 #### Determine the time-step
-Before we write the finite difference functions, we need to determine a time-step to advance the simulation by. To ensure the convergence of finite difference methods, an upper bound on the time-step is provided by the Courant–Friedrichs–Lewy (CFL) criterion which is set as the time-step for the simulation using the SetTimeStep function. Adhering to the CFL criterion ensures that information propagated in a time-step is not farther than the distance between two mesh elements.
+Before we write the finite difference functions, we need to determine a time step to advance the simulation by. To ensure the convergence of finite difference methods, an upper bound on the time-step is provided by the Courant–Friedrichs–Lewy (CFL) criterion which is set as the time-step for the simulation using the SetTimeStep function. Adhering to the CFL criterion ensures that information propagated in a time step is not farther than the distance between two mesh elements.
 See FlowPy.py (lines 153 to 168).
 #### Finite difference scheme
-Having determined the time-step, we are now ready to implement the finite difference scheme. To solve the equation of continuity and the Navier-Stokes equations simultaneously, we use a predictor-corrector scheme involving the following steps (for more information refer to this guide): https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
+Having determined the time step, we are now ready to implement the finite difference scheme. To solve the equation of continuity and the Navier-Stokes equations simultaneously, we use a predictor-corrector scheme involving the following steps (for more information refer to this guide): https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
 
 - Calculate starred velocities (u* and v*) from initial velocities without the effect of pressure.
 $$ 
@@ -153,14 +153,14 @@ See FlowPy.py (lines 295 to 325).
 ### The Simulation User Interface — FlowPy_Input
 This section is shorter than the previous one — most of the heavy lifting has been done, we just need to make use of all the defined classes and functions to run the simulation now!
 
-As an example, inputs relevant to the Lid Cavity Test (at Reynolds Number=400) are entered in this tutorial. In this test, fluid is kept in a 2D box with three rigid walls and the fourth wall (or the lid) is moved at a uniform velocity. Once steady state is reached, statistics of the developed flow field can be compared to a benchmark.
+As an example, inputs relevant to the Lid Cavity Test (at Reynolds Number=400) are entered in this tutorial. In this test, fluid is kept in a 2D box with three rigid walls and the fourth wall (or the lid) is moved at a uniform velocity. Once a steady state is reached, statistics of the developed flow field can be compared to a benchmark.
 
 ![Alt text](<Assets/Figure 2 Lid Cavity Problem set-up.png> "Figure 2: Lid Cavity Problem set-up")
 Figure 2: Lid Cavity Problem set-up
 #### FlowPy_Input.py Imports
-First, we import required modules and this now includes all the things that we have defined in FlowPy.py
+First, we import the required modules and this now includes all the things that we have defined in FlowPy.py
 See FlowPy_Input.py (lines 1 to 6). 
-#### Define spacial, temporal, physical and momentum parameters
+#### Define spatial, temporal, physical, and momentum parameters
 We begin by specifying input variables describing the domain and then creating a Space object with these variables.
 Next, the density and viscosity of the fluid are specified, and an object of the class Fluid is created.
 Third, we create Boundary objects to set velocity and pressure boundary conditions.
@@ -169,13 +169,13 @@ See FlowPy_Input.py (lines 13 to 48).
 
 #### Write the simulation loop
 Now, we can write the loop to run the simulation. The general procedure is as follows. Until the simulation time is completed, do the following in every iteration:
-- Set the time-step according to the CFL number criterion
+- Set the time step according to the CFL number criterion
 - Set boundary conditions
 - Calculate starred velocities
 - Solve the pressure Poisson equation to get the pressure field
 - Determine velocities at the next time-step
 - Write results to file (if file flag is 1)
-- Advance time by a value equal to the time-step
+- Advance time by a value equal to the time step
 See FlowPy_Input.py (lines 48 to 101)
 Having reached here, we are now ready to run the simulation for any generalized set of inputs. There’s just one piece of the puzzle left — a visualization tool.
 
@@ -213,15 +213,16 @@ Figure 4: Benchmark 2. The blue line represents simulation results and the red p
 
 While this tutorial only includes the simulation of the lid cavity test, you can try playing around with the inputs and boundary conditions to model a variety of different single-phase flow problems, like Poiseuille flow in a pipe.
 
-With the creation and validation of FlowPy, we can move to the next step in the modeling of a crystallizer — addition of heat and mass transfer to the solver, which will be covered in the next article.
+With the creation and validation of FlowPy, we can move to the next step in the modeling of a crystallizer — the addition of heat and mass transfer to the solver, which will be covered in the next article.
 ## 7. Known Issues ##
-There aren't much issues with the project, but here are some I encountered (and you need to be aware of too): 
+There aren't many issues with the project, but here are some I encountered (and you need to be aware of too): 
 - Some parts of the code are extremely bulky, especially the ones involving heavy computation (NumPy)
 - It took a while to make the simulation save properly. If you have any issues with saving the simulation, check out this tutorial: https://holypython.com/how-to-save-matplotlib-animations-the-ultimate-guide/?expand_article=1
 
 ## 8. References ##
 - This project is purely based on the project (with the same title as this one) proposed in this article: https://towardsdatascience.com/computational-fluid-dynamics-using-python-modeling-laminar-flow-272dad1ebec. The article's code is also available on GitHub: https://github.com/gauravsdeshmukh/FlowPy/tree/master.
 - https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
+- https://www.cfd-online.com/Wiki/Lid-driven_cavity_problem
 
 Other Important References:
 
