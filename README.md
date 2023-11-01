@@ -220,8 +220,8 @@ There aren't much issues with the project, but here are some I encountered (and 
 - It took a while to make the simulation save properly. If you have any issues with saving the simulation, check out this tutorial: https://holypython.com/how-to-save-matplotlib-animations-the-ultimate-guide/?expand_article=1
 
 ## 8. References ##
-This project is purely based on the project (with the same title as this one) proposed in this article: 
-https://towardsdatascience.com/computational-fluid-dynamics-using-python-modeling-laminar-flow-272dad1ebec. The article's code is also available on GitHub: https://github.com/gauravsdeshmukh/FlowPy/tree/master. 
+- This project is purely based on the project (with the same title as this one) proposed in this article: https://towardsdatascience.com/computational-fluid-dynamics-using-python-modeling-laminar-flow-272dad1ebec. The article's code is also available on GitHub: https://github.com/gauravsdeshmukh/FlowPy/tree/master.
+- https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
 
 Other Important References:
 
