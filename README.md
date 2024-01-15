@@ -126,17 +126,20 @@ See FlowPy.py (lines 153 to 168).
 Having determined the time step, we are now ready to implement the finite difference scheme. To solve the equation of continuity and the Navier-Stokes equations simultaneously, we use a predictor-corrector scheme involving the following steps (for more information refer to this guide): https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
 
 - Calculate starred velocities (u* and v*) from initial velocities without the effect of pressure.
+
 $$ 
 u^{*}(t) = u(t) + \Delta t \left[-u(t)\frac{\Delta u(t)}{\Delta x} - v(t)\frac{\Delta u(t)}{\Delta y} 
 + \nu \left (\frac{\Delta^{2} u(t)}{\Delta x^{2}} + \frac{\Delta^{2} u(t)}{\Delta y^{2}} \right) \right]
 $$
 
 - Iteratively solve the pressure Poisson equation using the starred velocities.
+
 $$ 
 \frac{\Delta^{2} p(t + \Delta t)}{\Delta x^{2}} + \frac{\Delta^{2} p(t + \Delta t)}{\Delta y^{2}} = -\frac{\rho}{\Delta t} \left(\frac{\Delta u^{*}(t)}{\Delta x} + \frac{\Delta u^{*}(t)}{\Delta y} \right)
 $$
 
 - Calculate the velocities for the next time-step from the pressure and starred velocities.
+
 $$ 
 u(t + \Delta t) = u^{*}(t) + \Delta t \left(-\frac{1}{\rho} \frac{\Delta p}{\Delta x} \right)
 $$
@@ -180,10 +183,10 @@ See FlowPy_Input.py (lines 48 to 101)
 Having reached here, we are now ready to run the simulation for any generalized set of inputs. There’s just one piece of the puzzle left — a visualization tool.
 
 ### The Visualization Tool — FlowPy_Visualizer
-The text files that are generated after running the simulation contain raw numbers that may not provide a physical picture of the fluid flow by themselves. However, a simple, animated contour plot can be used to combine the three variables — horizontal velocity, vertical velocity and pressure — and show their time evolution in an intuitive manner.
+The text files that are generated after running the simulation contain raw numbers that may not provide a physical picture of the fluid flow by themselves. However, a simple, animated contour plot can be used to combine the three variables — horizontal velocity, vertical velocity, and pressure — and show their time evolution in an intuitive manner.
 
 #### FlowPy_Visualizer.py Imports
-As before, first import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
+As before, first, import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
 See FlowPy_Visualizer.py (lines 1 to 7). 
 #### Simulation inputs
 To ensure that arrays of appropriate sizes are created, simulation inputs pertaining to the computational domain need to be entered.
