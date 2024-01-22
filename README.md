@@ -198,14 +198,14 @@ See FlowPy_Visualizer.py (lines 75 to 149).
 ## 6. Results ##
 The animated contour and stream plot for the lid cavity benchmark at Re=400 is shown below. It shows the formation of a vortex at the center as the simulation progresses and ultimately, a transition to a steady state.
 
-![Alt text](Result/FluidFlowAnimation.gif, "Resulting plot")
+![Alt text](Result/FluidFlowAnimation.gif)
 
 A quantitative comparison of the statistics of the steady flow with the results of Ghia et al. (1982) is also performed. Specifically, the horizontal velocities along a vertical line passing through the center of the cavity and vice versa are compared with the simulation results from the paper. The results show reasonable agreement. Deviations can be attributed to the lower accuracy of the finite difference scheme and smaller grid size.
 
-![Alt text](Assets/Figure%203.webp, "Figure 3: Benchmark 1. The blue line represents simulation results and the red points represent results from Ghia et al. (1982).")
+![Alt text](Assets/Figure3.webp)
 Figure 3: Benchmark 1. The blue line represents simulation results and the red points represent results from Ghia et al. (1982).
 
-![Alt text](Assets/Figure%204.webp, "Figure 4: Benchmark 2. The blue line represents simulation results and the red points represent results from Ghia et al. (1982).")
+![Alt text](Assets/Figure4.webp)
 Figure 4: Benchmark 2. The blue line represents simulation results and the red points represent results from Ghia et al. (1982). 
 
 While this tutorial only includes the simulation of the lid cavity test, you can try playing around with the inputs and boundary conditions to model a variety of different single-phase flow problems, like Poiseuille flow in a pipe.
