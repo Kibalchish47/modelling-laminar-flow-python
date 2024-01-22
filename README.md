@@ -128,22 +128,15 @@ Having determined the time step, we are now ready to implement the finite differ
 
 - Calculate starred velocities (u* and v*) from initial velocities without the effect of pressure.
 
-$$ 
-u^{*}(t) = u(t) + \Delta t \left[-u(t)\frac{\Delta u(t)}{\Delta x} - v(t)\frac{\Delta u(t)}{\Delta y} 
-+ \nu \left (\frac{\Delta^{2} u(t)}{\Delta x^{2}} + \frac{\Delta^{2} u(t)}{\Delta y^{2}} \right) \right]
-$$
+$$ u^{*}(t) = u(t) + \Delta t \left[-u(t)\frac{\Delta u(t)}{\Delta x} - v(t)\frac{\Delta u(t)}{\Delta y} + \nu \left (\frac{\Delta^{2} u(t)}{\Delta x^{2}} + \frac{\Delta^{2} u(t)}{\Delta y^{2}} \right) \right] $$
 
 - Iteratively solve the pressure Poisson equation using the starred velocities.
 
-$$ 
-\frac{\Delta^{2} p(t + \Delta t)}{\Delta x^{2}} + \frac{\Delta^{2} p(t + \Delta t)}{\Delta y^{2}} = -\frac{\rho}{\Delta t} \left(\frac{\Delta u^{*}(t)}{\Delta x} + \frac{\Delta u^{*}(t)}{\Delta y} \right)
-$$
+$$ \frac{\Delta^{2} p(t + \Delta t)}{\Delta x^{2}} + \frac{\Delta^{2} p(t + \Delta t)}{\Delta y^{2}} = -\frac{\rho}{\Delta t} \left(\frac{\Delta u^{*}(t)}{\Delta x} + \frac{\Delta u^{*}(t)}{\Delta y} \right) $$
 
 - Calculate the velocities for the next time-step from the pressure and starred velocities.
 
-$$ 
-u(t + \Delta t) = u^{*}(t) + \Delta t \left(-\frac{1}{\rho} \frac{\Delta p}{\Delta x} \right)
-$$
+$$ u(t + \Delta t) = u^{*}(t) + \Delta t \left(-\frac{1}{\rho} \frac{\Delta p}{\Delta x} \right) $$
 
 We define three different functions to carry out each of these three steps.
 See FlowPy.py (lines 169 to 288). 
