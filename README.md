@@ -62,6 +62,7 @@ Consider a 2D box having a fixed volume in space. This is what we term the contr
 Figure 1: Control Volume.
 
 First, we will apply the principle of conservation of mass to the fluid in the control volume. For an incompressible fluid (most liquids), this means that whatever fluid enters the box must exit it. This is referred to as the equation of continuity in fluid mechanics.
+
 $$
 \frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0
 $$
