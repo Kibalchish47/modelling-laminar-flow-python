@@ -76,7 +76,7 @@ $$
 \frac{\partial v}{\partial t} + u\frac{\partial v}{\partial x} + v\frac{\partial v}{\partial y} = -\frac{1}{\rho}\frac{\partial p}{\partial y} + \nu(\frac{\partial^{2} v}{\partial x^2} + \frac{\partial^{2} v}{\partial y^{2}})
 $$
 
-If we can solve these partial differential equations (PDEs) simultaneously after applying requisite boundary conditions, we will obtain the instantaneous velocities and pressure as a function of time, allowing us to predict how the fluid will flow. However, there is no analytical method to solve these equations (in their complete forms) without applying simplifying assumptions. Therefore, we resort to numerical techniques for solving these equations.
+If we can solve these partial differential equations (PDEs) simultaneously after applying requisite boundary conditions, we will obtain the instantaneous velocities and pressure as a function of time, allowing us to predict how the fluid will flow. However, there is no analytical method to solve these equations (in their complete forms) without applying simplifying assumptions (that we know of). Therefore, we resort to numerical techniques for solving these equations. If you find one, contact the Clay Mathematics Institute to claim your 1,000,000$.
 
 ## 3. Numerical Methods ##
 There exist a variety of different numerical methods for solving PDEs, each with its own set of caveats. The simplest method is the Finite Difference method wherein a low-order Taylor series approximation is used to convert the PDEs to a set of algebraic equations. An example is given below that shows how to convert first and second-order derivatives to their finite difference approximations.
@@ -126,17 +126,20 @@ See FlowPy.py (lines 153 to 168).
 Having determined the time step, we are now ready to implement the finite difference scheme. To solve the equation of continuity and the Navier-Stokes equations simultaneously, we use a predictor-corrector scheme involving the following steps (for more information refer to this guide): https://www.montana.edu/mowkes/research/source-codes/GuideToCFD_2020_02_28_v2.pdf
 
 - Calculate starred velocities (u* and v*) from initial velocities without the effect of pressure.
+
 $$ 
 u^{*}(t) = u(t) + \Delta t \left[-u(t)\frac{\Delta u(t)}{\Delta x} - v(t)\frac{\Delta u(t)}{\Delta y} 
 + \nu \left (\frac{\Delta^{2} u(t)}{\Delta x^{2}} + \frac{\Delta^{2} u(t)}{\Delta y^{2}} \right) \right]
 $$
 
 - Iteratively solve the pressure Poisson equation using the starred velocities.
+
 $$ 
 \frac{\Delta^{2} p(t + \Delta t)}{\Delta x^{2}} + \frac{\Delta^{2} p(t + \Delta t)}{\Delta y^{2}} = -\frac{\rho}{\Delta t} \left(\frac{\Delta u^{*}(t)}{\Delta x} + \frac{\Delta u^{*}(t)}{\Delta y} \right)
 $$
 
 - Calculate the velocities for the next time-step from the pressure and starred velocities.
+
 $$ 
 u(t + \Delta t) = u^{*}(t) + \Delta t \left(-\frac{1}{\rho} \frac{\Delta p}{\Delta x} \right)
 $$
@@ -216,7 +219,7 @@ While this tutorial only includes the simulation of the lid cavity test, you can
 With the creation and validation of FlowPy, we can move to the next step in the modeling of a crystallizer — the addition of heat and mass transfer to the solver, which will be covered in the next article.
 ## 7. Known Issues ##
 There aren't many issues with the project, but here are some I encountered (and you need to be aware of too): 
-- Some parts of the code are extremely bulky, especially the ones involving heavy computation (NumPy)
+- Some parts of the code are extremely bulky, especially the ones involving NumPy vectorization (and I have no clue how to simplify it)
 - It took a while to make the simulation save properly. If you have any issues with saving the simulation, check out this tutorial: https://holypython.com/how-to-save-matplotlib-animations-the-ultimate-guide/?expand_article=1
 
 ## 8. References ##
