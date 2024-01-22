@@ -62,6 +62,7 @@ Consider a 2D box having a fixed volume in space. This is what we term the contr
 Figure 1: Control Volume.
 
 First, we will apply the principle of conservation of mass to the fluid in the control volume. For an incompressible fluid (most liquids), this means that whatever fluid enters the box must exit it. This is referred to as the equation of continuity in fluid mechanics.
+
 $$
 \frac{\partial u}{\partial x} + \frac{\partial v}{\partial y} = 0
 $$
@@ -183,10 +184,10 @@ See FlowPy_Input.py (lines 48 to 101)
 Having reached here, we are now ready to run the simulation for any generalized set of inputs. There’s just one piece of the puzzle left — a visualization tool.
 
 ### The Visualization Tool — FlowPy_Visualizer
-The text files that are generated after running the simulation contain raw numbers that may not provide a physical picture of the fluid flow by themselves. However, a simple, animated contour plot can be used to combine the three variables — horizontal velocity, vertical velocity and pressure — and show their time evolution in an intuitive manner.
+The text files that are generated after running the simulation contain raw numbers that may not provide a physical picture of the fluid flow by themselves. However, a simple, animated contour plot can be used to combine the three variables — horizontal velocity, vertical velocity, and pressure — and show their time evolution in an intuitive manner.
 
 #### FlowPy_Visualizer.py Imports
-As before, first import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
+As before, first, import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
 See FlowPy_Visualizer.py (lines 1 to 7). 
 #### Simulation inputs
 To ensure that arrays of appropriate sizes are created, simulation inputs pertaining to the computational domain need to be entered.
