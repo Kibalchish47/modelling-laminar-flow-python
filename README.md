@@ -90,7 +90,7 @@ $$
 \frac{\partial^{2} u}{\partial x^2} \approx \frac{u(x+\Delta x) - 2u(x) + u(x - \Delta x)}{2\Delta x} = \frac{\Delta^2 u}{\Delta x^2}
 $$
 
-While this is not the best method to model fluid flow in all cases, we will proceed with it since it simplifies other aspects of modeling a crystallizer. For more rigorous numerical treatments, you may want to use the Finite Volume or Finite Element methods (maybe I'll make a separate project utilizing those methods).
+While this is not the best method to model fluid flow in all cases, we will proceed with it since it's relatively easy than other methods. For more rigorous numerical treatments, you may want to use the Finite Volume or Finite Element methods (maybe I'll make a separate project utilizing those methods).
 
 ## 4. Code Organization ##
 The code is organized into three different files or scripts. 
@@ -183,7 +183,7 @@ The text files that are generated after running the simulation contain raw numbe
 As before, first, import the required modules. Particularly, we will require the matplotlib.animation module to record the animation.
 See FlowPy_Visualizer.py (lines 1 to 7). 
 #### Simulation inputs
-To ensure that arrays of appropriate sizes are created, simulation inputs pertaining to the computational domain need to be entered.
+To ensure that arrays of appropriate sizes are created, simulation inputs about the computational domain need to be entered.
 See FlowPy_Visualizer.py (lines 13 to 21). 
 #### Text to array conversion
 Before moving to plotting, the text files that were saved during the simulation have to be imported as arrays. To do so, we first go through the Result directory, store all the filenames, and determine the total number of files as well as the printing interval.
