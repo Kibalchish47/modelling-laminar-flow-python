@@ -216,7 +216,7 @@ def GetStarredVelocities(space, fluid):
 #### The second function is used to iteratively solve the pressure Possion equation from the starred velocities 
 #### to calculate pressure at t+delta_t
 def SolvePressurePoisson(space, fluid, left, right, top, bottom):
-    # Save object attributes as local variable with explicity typing for improved readability
+    # Save object attributes as local variable with explicitly typing for improved readability
     rows = int(space.rowpts)
     cols = int(space.colpts)
     u_star = space.u_star.astype(float, copy=False)
@@ -263,7 +263,7 @@ def SolvePressurePoisson(space, fluid, left, right, top, bottom):
 #### The third function is used to calculate the velocities at timestep t+delta_t 
 #### using the pressure at t+delta_t and starred velocities
 def SolveMomentumEquation(space, fluid):
-    #Save object attributes as local variable with explicity typing for improved readability
+    #Save object attributes as local variable with explicitly typing for improved readability
     rows = int(space.rowpts)
     cols = int(space.colpts)
     u_star = space.u_star.astype(float, copy=False)
